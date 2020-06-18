@@ -47,6 +47,8 @@ const useTypeScript = fs.existsSync(paths.appTsConfig);
 // style files regexes
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
+const lessRegex = /\.less$/;
+const lessModuleRegex = /\.module\.less$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
@@ -79,6 +81,10 @@ module.exports = function(webpackEnv) {
           ? { publicPath: '../../' }
           : {},
       },
+      // {
+      //   loader: require.resolve('less-loader'),
+      //   options: cssOptions,
+      // },
       {
         loader: require.resolve('css-loader'),
         options: cssOptions,
@@ -382,6 +388,11 @@ module.exports = function(webpackEnv) {
                       },
                     },
                   ],
+                  ['import',
+                  {
+                    libraryName: 'antd',
+                    style: true
+                  }]
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -442,6 +453,23 @@ module.exports = function(webpackEnv) {
             // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
             // using the extension .module.css
             {
+              test: /\.less$/,
+              use: [{
+                  loader: "style-loader" 
+              }, {
+                  loader: "css-loader" 
+              }, {
+                  loader: "less-loader",
+                  options: {
+                      sourceMap: false,
+                      modifyVars: {
+                          '@primary-color': '#f9c700',　　//修改antd主题色
+                      },
+                      javascriptEnabled: true,
+                  }
+              }]
+            },
+            {
               test: cssModuleRegex,
               use: getStyleLoaders({
                 importLoaders: 1,
@@ -485,6 +513,26 @@ module.exports = function(webpackEnv) {
                 'sass-loader'
               ),
             },
+
+
+            {
+              test: lessRegex,
+              exclude: lessModuleRegex,
+              use: getStyleLoaders(
+                {
+                  importLoaders: 3,
+                  sourceMap: isEnvProduction && shouldUseSourceMap,
+                },
+                'less-loader'
+              ),
+              // Don't consider CSS imports dead code even if the
+              // containing package claims to have no side effects.
+              // Remove this when webpack adds a warning or an error for this.
+              // See https://github.com/webpack/webpack/issues/6571
+              sideEffects: true,
+            },
+            // Adds support for CSS Modules, but using SASS
+            // using the extension .module.scss or .module.sass
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
             // In production, they would get copied to the `build` folder.
