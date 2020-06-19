@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-// import App from './App';
-import Life from './pages/demo/life'
+import Admin from './admin';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <Life />,
+  <Admin />,
   document.getElementById('root')
 );
 
