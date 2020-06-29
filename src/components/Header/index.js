@@ -2,10 +2,11 @@ import React from 'react'
 import {Row, Col} from 'antd'
 import './index.less'
 import Util from '../../utils/utils'
+import axios from '../../axios'
 export default class Header extends React.Component {
     state = {
     }
-    componentWillMount () {
+    UNSAFE_componentWillMount () {
         this.setState({
             userName: '三叶'
         })
@@ -15,6 +16,14 @@ export default class Header extends React.Component {
                 systime
             })
         }, 1000)
+        this.getWeatherAPIData()
+    }
+    getWeatherAPIData () {
+        axios.jsonp({
+            url: 'https://restapi.amap.com/v3/weather/weatherInfo?parameters?key=a7e1e0707cdadd26c0cbb66f93dcdc18&city=0993'
+        }).then(res => {
+            console.log(res)
+        })
     }
     render() {
         return (

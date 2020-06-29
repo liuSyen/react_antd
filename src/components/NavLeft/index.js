@@ -5,9 +5,8 @@ import './index.less'
 const { SubMenu, Item } = Menu;
 
 export default class NavLeft extends React.Component {
-    componentWillMount () {
+    UNSAFE_componentWillMount () {
         const menuTreeNode = this.renderMenu(MenuConfig)
-        console.log(menuTreeNode)
         this.setState({
             menuTreeNode
         })
